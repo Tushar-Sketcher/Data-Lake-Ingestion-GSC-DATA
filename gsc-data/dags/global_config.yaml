@@ -1,0 +1,33 @@
+common:
+  schedule_interval: '00 05 * * *'
+  tables: 'daily-general,daily-top-20-search'
+  script_path: 'https://artifactory.zgtools.net/artifactory/analytics-generic/analytics/airflow/dags/big-data/gsc-data/{version}'
+  spark_docker_image: 'analytics-docker.artifactory.zgtools.net/analytics/zacs/docker/spark/zbi-spark:main-8'
+  max_active_runs : 2
+  concurrency : 2
+  retries: 0
+  retry_delay: 5
+  email_on_failure: True
+  email_on_retry: False
+  path: '/zillow/gsc-data/prod/'
+  zodiac_config:
+    version: v2
+    zodiac_team: big-data-zbi
+    zodiac_service: datalake-gsc
+    environments:
+      batch:
+        dev: stable
+        stage: stable
+        prod: prod
+stage:
+  start_date: '2021-02-12 00:00:00'
+  email: 'v-vishalpr@zillowgroup.com, v-rajendrp@zillowgroup.com'
+  assume_role: 'arn:aws:iam::170606514770:role/dev-gsc-data-ingestor-role'
+  raw_bucket: 'raw-datalake-zillowgroup'
+  datalake_bucket: 'dev-datalake-zillowgroup'
+prod:
+  start_date: '2021-02-12 00:00:00'
+  email: 'bigdata-gsc-daily-prod@zillowgroup.opsgenie.net'
+  assume_role: 'arn:aws:iam::170606514770:role/gsc-data-ingestor-role'
+  raw_bucket: 'raw-datalake-zillowgroup'
+  datalake_bucket: 'datalake-zillowgroup'
